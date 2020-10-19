@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProjectOrganizer.Models
 {
-    public class Department
+    public class Department 
     {
         /// <summary>
         /// The dept id.
