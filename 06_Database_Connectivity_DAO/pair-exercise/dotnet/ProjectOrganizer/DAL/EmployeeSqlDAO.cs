@@ -10,6 +10,7 @@ namespace ProjectOrganizer.DAL
     public class EmployeeSqlDAO : IEmployeeDAO
     {
         private string connectionString;
+        private string sqlGetEmployee = "SELECT * FROM employee;";
 
         // Single Parameter Constructor
         public EmployeeSqlDAO(string dbConnectionString)
@@ -23,7 +24,7 @@ namespace ProjectOrganizer.DAL
         /// <returns>A list of all employees.</returns>
         public IList<Employee> GetAllEmployees()
         {
-            throw new NotImplementedException();
+            throw
         }
 
         /// <summary>
