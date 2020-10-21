@@ -21,18 +21,20 @@ namespace AccessTests
             int beforeCount = 0;
             int afterCount = 0;
             transaction = new TransactionScope();
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                SqlTransaction transaction;
-                conn.Open();
-                transaction = conn.BeginTransaction();
 
-                SqlCommand command = new SqlCommand(
-                    "SELECT count(*) FROM department;", conn);
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    SqlTransaction transaction;
+                    conn.Open();
+                    transaction = conn.BeginTransaction();
 
-                beforeCount = (int)command.ExecuteScalar();
+                    SqlCommand command = new SqlCommand(
+                        "SELECT count(*) FROM department;", conn);
 
+                    beforeCount = (int)command.ExecuteScalar();
+                }
 
                 DepartmentSqlDAO dao = new DepartmentSqlDAO(connectionString);
                 Department department = new Department();
@@ -40,11 +42,18 @@ namespace AccessTests
 
 
                 dao.CreateDepartment(department);
-                //string sql_insert = "INSERT INTO department (name) VALUES (sales);";
-                SqlCommand cmd = new SqlCommand("SELECT count(*) FROM department;", conn);
-                afterCount = (int)cmd.ExecuteScalar();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT count(*) FROM department;", conn);
+                    afterCount = (int)cmd.ExecuteScalar();
 
+                }
                 Assert.AreEqual(beforeCount + 1, afterCount);
+            }
+            catch
+            {
+                transaction.Dispose();
             }
         }
 
