@@ -22,12 +22,16 @@ namespace Capstone
         {
             this.connectionString = connectionString;
             this.venueDAO = new VenueSQLDAO(connectionString);
-            this.spaceDAO = new SpaceSQLDAO(connectionString);
+            //this.spaceDAO = new SpaceSQLDAO(connectionString);
         }
         
         public void Run()
         {
-            Console.WriteLine(venueDAO.GetAllVenueNames().ToString());
+            
+            foreach (string venue in venueDAO.GetAllVenueNames())
+            {
+                Console.WriteLine(venue);
+            }
             Console.WriteLine("Reached the User Interface.");
             Console.ReadLine();
         }

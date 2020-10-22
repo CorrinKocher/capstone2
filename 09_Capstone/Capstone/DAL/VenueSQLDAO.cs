@@ -48,7 +48,6 @@ namespace Capstone.DAL
                 }
                 foreach (Venue item in venues)
                 {
-
                     venueIdAndName = (($"({item.VenueId}) {item.VenueName}"));
                     venueString.Add(venueIdAndName);
                 }
