@@ -17,26 +17,59 @@ namespace Capstone
         private string connectionString;
 
 
-        
+
         public UserInterface(string connectionString)
         {
             this.connectionString = connectionString;
             this.venueDAO = new VenueSQLDAO(connectionString);
             //this.spaceDAO = new SpaceSQLDAO(connectionString);
         }
-        
+
         public void Run()
         {
-            
             foreach (string venue in venueDAO.GetAllVenueNames())
             {
                 Console.WriteLine(venue);
             }
-            Console.WriteLine("Reached the User Interface.");
-            Console.ReadLine();
+            int venueIdRequested = 0;
+            Console.WriteLine("Please enter the VenueId you would like more information on");
+            venueIdRequested = int.Parse(Console.ReadLine());
+            venueDAO.DisplayVenueDetails(venueIdRequested);
+            Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
         }
-        
-       
 
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //public void WriteAllVenues()
+        //{
+        //    foreach (string venue in venueDAO.GetAllVenueNames())
+        //    {
+        //        Console.WriteLine(venue);
+        //    }
+        //}
+
+         
+
+
+
+}
 }
