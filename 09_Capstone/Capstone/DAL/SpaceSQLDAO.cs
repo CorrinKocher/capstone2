@@ -7,7 +7,7 @@ namespace Capstone.DAL
     /// <summary>
     /// methods to make: SeeAllSpacesForVenue, 
     /// </summary>
-    class SpaceSQLDAO
+    public class SpaceSQLDAO
     {
     }
 }

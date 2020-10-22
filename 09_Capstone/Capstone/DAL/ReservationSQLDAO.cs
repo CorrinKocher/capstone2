@@ -7,7 +7,7 @@ namespace Capstone.DAL
     /// <summary>
     /// methods: bookReservation,
     /// </summary>
-    class ReservationSQLDAO
+    public class ReservationSQLDAO
     {
     }
 }

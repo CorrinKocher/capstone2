@@ -7,7 +7,7 @@ namespace Capstone.DAL
     /// <summary>
     /// methods: bookReservation,
     /// </summary>
-    class Reservation
+    public class Reservation
     {
         public int ReservationId { get; set; }
 

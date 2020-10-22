@@ -7,7 +7,7 @@ namespace Capstone.DAL
     /// <summary>
     /// methods to make: SeeAllSpacesForVenue, 
     /// </summary>
-    class Space
+    public class Space
     { 
         public int SpaceId { get; set; }
 

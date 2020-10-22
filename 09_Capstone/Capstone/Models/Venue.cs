@@ -7,7 +7,7 @@ namespace Capstone.DAL
     /// <summary>
     /// Methods: ViewAllVenues, SelectVenue, ReturnAllAvailableDatesForAVenue, DispayVenueDetails
     /// </summary>
-    class Venue
+    public class Venue
     {
         public int VenueId { get; set; }
 
@@ -22,5 +22,10 @@ namespace Capstone.DAL
         public string Description { get; set; }
 
         public string Category { get; set; }
+
+        public override string ToString()
+        {
+            return ($"({VenueId}) {VenueName}");
+        }
     }
 }
