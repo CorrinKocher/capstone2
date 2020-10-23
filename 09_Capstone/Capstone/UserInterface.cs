@@ -24,10 +24,12 @@ namespace Capstone
         {
             this.connectionString = connectionString;
             this.venueDAO = new VenueSQLDAO(connectionString);
-            //this.spaceDAO = new SpaceSQLDAO(connectionString);
+            this.spaceDAO = new SpaceSQLDAO(connectionString);
+            
         }
         public void Run()
         {
+
            
             DisplayMainMenu();
             string menuSelection = Console.ReadLine();
@@ -38,6 +40,27 @@ namespace Capstone
             Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));           
             VenueMenu();
             string venueMenuSelection = Console.ReadLine();
+
+            //Space space = new Space();
+            //int spaceIdRequested = 0;
+         
+
+            //DisplayMainMenu();
+            //string menuSelection = Console.ReadLine();
+            //MainMenuSelection(menuSelection);
+            
+            
+            //Console.WriteLine("Please enter the VenueId you would like more information on");
+            //venueIdRequested = int.Parse(Console.ReadLine());
+           
+            //Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
+            //spaceDAO.DisplayAllSpacesByVenueId(venueIdRequested.ToString());
+            //Console.WriteLine();
+            //Console.WriteLine("please enter the spaceID you wouldlike to see");
+            //spaceIdRequested = int.Parse(Console.ReadLine());
+            //spaceDAO.CreateSpaceModel(spaceIdRequested);
+            
+
             
         }
         
@@ -65,6 +88,7 @@ namespace Capstone
                     break;
             }
         }
+
         public void VenueMenu()
         {
             Console.WriteLine();
@@ -74,6 +98,7 @@ namespace Capstone
             Console.WriteLine(  "2) Search for Reservation");
             Console.WriteLine(  "R) Return to Previous Screen");
         }
+
 
 
 
