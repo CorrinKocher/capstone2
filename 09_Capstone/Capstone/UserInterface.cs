@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Capstone.DAL;
 namespace Capstone
@@ -15,7 +17,7 @@ namespace Capstone
         private VenueSQLDAO venueDAO;
         private SpaceSQLDAO spaceDAO;
         private string connectionString;
-
+        
 
 
         public UserInterface(string connectionString)
@@ -24,18 +26,43 @@ namespace Capstone
             this.venueDAO = new VenueSQLDAO(connectionString);
             //this.spaceDAO = new SpaceSQLDAO(connectionString);
         }
-
         public void Run()
         {
-            foreach (string venue in venueDAO.GetAllVenueNames())
-            {
-                Console.WriteLine(venue);
-            }
+           
+            DisplayMainMenu();
+            string menuSelection = Console.ReadLine();
+            MainMenuSelection(menuSelection);
+           
             int venueIdRequested = 0;
             Console.WriteLine("Please enter the VenueId you would like more information on");
             venueIdRequested = int.Parse(Console.ReadLine());
-            venueDAO.DisplayVenueDetails(venueIdRequested);
             Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
+            
+        }
+        
+        public void DisplayMainMenu()
+        {
+
+            Console.WriteLine("What would you like to do ?");
+            Console.WriteLine("1) List Venues");
+            Console.WriteLine("Q) Quit");
+            
+        }
+
+        public void MainMenuSelection(string menuSelection)
+        {
+            switch (menuSelection)
+            {
+                case "1":
+                    foreach (string venue in venueDAO.GetAllVenueNames())
+                    {
+                        Console.WriteLine(venue);
+                    }
+                    break;
+                case "Q":
+                    Console.WriteLine("Thank you for using our service!");
+                    break;
+            }
         }
 
 
@@ -51,25 +78,5 @@ namespace Capstone
 
 
 
-
-
-
-
-
-
-
-
-        //public void WriteAllVenues()
-        //{
-        //    foreach (string venue in venueDAO.GetAllVenueNames())
-        //    {
-        //        Console.WriteLine(venue);
-        //    }
-        //}
-
-         
-
-
-
-}
+    }
 }

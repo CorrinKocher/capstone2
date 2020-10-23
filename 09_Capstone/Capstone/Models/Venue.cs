@@ -23,9 +23,6 @@ namespace Capstone.DAL
 
         public string Category { get; set; }
 
-        public override string ToString()
-        {
-            return ($"({VenueId}) {VenueName}");
-        }
+        
     }
 }

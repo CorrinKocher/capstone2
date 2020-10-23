@@ -60,7 +60,7 @@ namespace Capstone.DAL
             return venueString;
         }
 
-        public Venue DisplayVenueDetails(int venueId) 
+        public string DisplayVenueDetails(int venueId) 
         {
             Venue venue = new Venue();
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -84,7 +84,7 @@ namespace Capstone.DAL
 
                     
                 }
-                return venue;
+                return ($"{venue.VenueName} \n \n Location: {venue.City}, {venue.State}  \n \n {venue.Description}");
             }
                                    
         }
