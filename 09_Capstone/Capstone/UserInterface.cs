@@ -16,8 +16,9 @@ namespace Capstone
         /// </summary>
         private VenueSQLDAO venueDAO;
         private SpaceSQLDAO spaceDAO;
+        private ReservationSQLDAO reservationDAO;
         private string connectionString;
-        
+
 
 
         public UserInterface(string connectionString)
@@ -25,24 +26,26 @@ namespace Capstone
             this.connectionString = connectionString;
             this.venueDAO = new VenueSQLDAO(connectionString);
             this.spaceDAO = new SpaceSQLDAO(connectionString);
-            
+            this.reservationDAO = new ReservationSQLDAO(connectionString);
         }
         public void Run()
         {
 
-           
+
             DisplayMainMenu();
             string menuSelection = Console.ReadLine();
             MainMenuSelection(menuSelection);
             int venueIdRequested = 0;
             Console.WriteLine("Please enter the VenueId you would like more information on");
             venueIdRequested = int.Parse(Console.ReadLine());
-            Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));           
+            Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
             VenueMenu();
             string venueMenuSelection = Console.ReadLine();
-            List<string> spacesList = spaceDAO.DisplayAllSpacesByVenueId(venueMenuSelection);
+            VenueMenuSelection(venueMenuSelection, venueIdRequested);
             Console.WriteLine();
             Console.ReadLine();
+            //MenuAtBottomOfDisplayAllSpaces();
+
             //Space space = new Space();
             //int spaceIdRequested = 0;
 
@@ -65,14 +68,14 @@ namespace Capstone
 
 
         }
-        
+
         public void DisplayMainMenu()
         {
 
             Console.WriteLine("What would you like to do ?");
             Console.WriteLine("1) List Venues");
             Console.WriteLine("Q) Quit");
-            
+
         }
 
         public void MainMenuSelection(string menuSelection)
@@ -96,11 +99,74 @@ namespace Capstone
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("What would you like to do next?");
-            Console.WriteLine(  "1) View Spaces");
-            Console.WriteLine(  "2) Search for Reservation");
-            Console.WriteLine(  "R) Return to Previous Screen");
+            Console.WriteLine("1) View Spaces");
+            Console.WriteLine("2) Search for Reservation");
+            Console.WriteLine("R) Return to Previous Screen");
         }
 
+        public void MenuAtBottomOfDisplayAllSpaces()
+        {
+            
+        }
+
+        public void VenueMenuSelection(string venueMenuSelection, int venueIdRequested)
+        {
+            switch (venueMenuSelection)
+            {
+                case "1":
+                    List<string> spacesList = spaceDAO.DisplayAllSpacesByVenueId(venueIdRequested.ToString());
+
+                    foreach (string item in spacesList)
+                    {
+                        Console.WriteLine(item);
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine("What would you like to do next?");
+                    Console.WriteLine(" 1) Reserve a Space");
+                    Console.WriteLine(" R) Return to Previous Screen");
+                    string bottomMenuSelection = Console.ReadLine();
+                    switch (bottomMenuSelection)
+                    {
+                        case "1":
+                            break;
+                        case "R":
+
+                            break;
+                    }
+
+                    break;
+                case "2":
+                    Console.WriteLine("What Date would you like to start your reservation? (yyyy-mm-dd)");
+                    DateTime startDate = DateTime.Parse(Console.ReadLine());
+                    Console.WriteLine("How many days would you like?");
+                    int numberOfDays = int.Parse(Console.ReadLine());
+                    Console.WriteLine();
+                    Console.WriteLine("Here's what is available:");
+                    if (reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays)).Count )
+                    foreach (string item in reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays))
+                    {
+                        Console.WriteLine(item);
+                    }
+                    break;
+                case "R":
+                    DisplayMainMenu();
+                    break;
+
+            }
+        }
+
+        public void BottomMenuSelection(string bottomMenuSelection, int venueIdRequested)
+        {
+            switch (bottomMenuSelection)
+            {
+                case "1":
+                    break;
+                case "R":
+                    
+                    break;
+            }
+        }
 
 
 
