@@ -40,28 +40,30 @@ namespace Capstone
             Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));           
             VenueMenu();
             string venueMenuSelection = Console.ReadLine();
-
+            List<string> spacesList = spaceDAO.DisplayAllSpacesByVenueId(venueMenuSelection);
+            Console.WriteLine();
+            Console.ReadLine();
             //Space space = new Space();
             //int spaceIdRequested = 0;
-         
+
 
             //DisplayMainMenu();
             //string menuSelection = Console.ReadLine();
             //MainMenuSelection(menuSelection);
-            
-            
+
+
             //Console.WriteLine("Please enter the VenueId you would like more information on");
             //venueIdRequested = int.Parse(Console.ReadLine());
-           
+
             //Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
-            //spaceDAO.DisplayAllSpacesByVenueId(venueIdRequested.ToString());
+
             //Console.WriteLine();
             //Console.WriteLine("please enter the spaceID you wouldlike to see");
             //spaceIdRequested = int.Parse(Console.ReadLine());
             //spaceDAO.CreateSpaceModel(spaceIdRequested);
-            
 
-            
+
+
         }
         
         public void DisplayMainMenu()

@@ -17,7 +17,7 @@ namespace Capstone.DAL
             + " is_accessible AS IsAccessible, daily_rate AS DailyRate, max_occupancy As MaxOccupancy, "
             + " open_from AS OpenFrom, open_to AS OpenTo FROM space WHERE id = @SpaceId;";
 
-        private string returnSpacesAccessability = "SELECT is_accessible FROM space WHERE id = @SpaceId;";
+        private string returnSpacesAccessability = "SELECT is_accessible AS IsAccessible FROM space WHERE id = @SpaceId;";
 
         private string returnAllSpacesByVenueId = "SELECT id AS SpaceId FROM space WHERE venue_id = @VenueId;";
 
@@ -84,7 +84,7 @@ namespace Capstone.DAL
         }
 
         
-        public string ConvertOpenDateIntegerToMonth(Space space)
+        public string ConvertToMonth(string month)
         {
             Dictionary<string, string> Months = new Dictionary<string, string>()
             {
@@ -102,56 +102,35 @@ namespace Capstone.DAL
                 {"12", "December" },
                 
             };
-            if(space.OpenDate == null)
+            if(string.IsNullOrEmpty(month))
             {
                 return "Open All Year";
             }
 
-            return Months[space.OpenDate];
+            return Months[month];
 
         }
 
-        public string ConvertCloseDateIntegerToMonth(Space space)
-        {
-            Dictionary<string, string> Months = new Dictionary<string, string>()
-            {
-                 {"1", "January" },
-                {"2", "February" },
-                {"3", "March" },
-                {"4", "April" },
-                {"5", "May" },
-                {"6", "June" },
-                {"7", "July" },
-                {"8", "August" },
-                {"9", "September" },
-                {"10", "October" },
-                {"11", "November" },
-                {"12", "December" },
-               
-            };
-            if (space.CloseDate == null)
-            {
-                return "Open All Year";
-            }
-            return Months[space.CloseDate];
+       
 
-        }
+        
 
         public string CreateSpaceString(Space space)
         {
-            CreateSpaceModel(space.SpaceId);
-            ConvertCloseDateIntegerToMonth(space);
-            ConvertOpenDateIntegerToMonth(space);
-            ConvertWheelChairBoolToString(space);
+           
+            Space newSpace = CreateSpaceModel(space.SpaceId);
+            string closeMonth = ConvertToMonth(newSpace.CloseDate);
+            string openMonth = ConvertToMonth(newSpace.OpenDate);
+            string accessibility = ConvertWheelChairBoolToString(newSpace); // do we need later?
 
 
-            return ($"{space.SpaceId}) {space.Name} {space.OpenDate} {space.CloseDate} {space.DailyRate} {space.MaximumOccupancy}");
+            return ($"{newSpace.SpaceId}) {newSpace.Name} {openMonth} {closeMonth} {newSpace.DailyRate} {newSpace.MaximumOccupancy}");
 
         }
 
         public List<string> DisplayAllSpacesByVenueId(string VenueId)
         {
-            Space space = new Space();
+           
             List<string> allSpacesByVenue = new List<string>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -163,6 +142,7 @@ namespace Capstone.DAL
 
                 while (reader.Read())
                 {
+                    Space space = new Space();
                     space.SpaceId = Convert.ToInt32(reader["SpaceId"]);
                     allSpacesByVenue.Add(CreateSpaceString(space));
                 }
