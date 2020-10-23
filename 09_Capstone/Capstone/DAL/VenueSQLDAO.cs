@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Transactions;
@@ -13,19 +14,19 @@ namespace Capstone.DAL
     public class VenueSQLDAO
     {
         private string searchByVendorId = "SELECT venue.id AS VenueId, venue.name AS VenueName, city.name AS CityName, venue.description AS VenueDescription, city.state_abbreviation AS StateAbbreviation FROM venue JOIN city ON venue.city_id = city.id WHERE venue.id = @venueid;";
-       // private string searchByVendorId = "SELECT * FROM venue JOIN category_venue "
-       //     + " ON venue.id = category_venue.venue_id JOIN category ON category_venue.category_id "
-       //    + " = category.id JOIN city ON venue.city_id = city.id WHERE venue.id = @venue.id;";
+        // private string searchByVendorId = "SELECT * FROM venue JOIN category_venue "
+        //     + " ON venue.id = category_venue.venue_id JOIN category ON category_venue.category_id "
+        //    + " = category.id JOIN city ON venue.city_id = city.id WHERE venue.id = @venue.id;";
         private string connectionString;
+        private string categoryName = "SELECT category.name AS CategoryName FROM category JOIN category_venue ON category.id = category_venue.category_id WHERE venue_id = @venueid;";
 
-        
         /// <summary>
         /// Creates a new sql based venue dao
         /// </summary>
         /// <param name="databaseConnectionString"></param>
         public VenueSQLDAO(string databaseConnectionString)
         {
-            this.connectionString = databaseConnectionString;            
+            this.connectionString = databaseConnectionString;
         }
 
 
@@ -60,7 +61,7 @@ namespace Capstone.DAL
             return venueString;
         }
 
-        public string DisplayVenueDetails(int venueId) 
+        public string DisplayVenueDetails(int venueId)
         {
             Venue venue = new Venue();
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -74,21 +75,45 @@ namespace Capstone.DAL
 
                 while (reader.Read())
                 {
-                    
+
                     venue.VenueId = Convert.ToInt32(reader["VenueId"]);
                     venue.VenueName = Convert.ToString(reader["VenueName"]);
-                   // venue.Category = Convert.ToString(reader["category.name"]);
                     venue.City = Convert.ToString(reader["CityName"]);
                     venue.State = Convert.ToString(reader["StateAbbreviation"]);
                     venue.Description = Convert.ToString(reader["VenueDescription"]);
 
-                    
                 }
-                return ($"{venue.VenueName} \n \n Location: {venue.City}, {venue.State}  \n \n {venue.Description}");
+                return ($"\n\n{venue.VenueName}\nLocation: {venue.City}, {venue.State}\nCategories:{Category(venueId)} \n\n{venue.Description}");
             }
-                                   
+
         }
 
+        public string Category(int venueId)
+        {
+            Venue venue = new Venue();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand command = new SqlCommand(categoryName, conn);
+                command.Parameters.AddWithValue("@venueid", venueId);
+                string allCategories = "";
+                List<string> categories = new List<string>();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    venue.Category = Convert.ToString(reader["CategoryName"]);
+                    categories.Add(venue.Category);
+                }
+                foreach (string item in categories)
+                {
+                    allCategories += item + " ";
+                }
+                return allCategories;
+                
+            }
+                
+               
+        }
 
     }
 
