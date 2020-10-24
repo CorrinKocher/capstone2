@@ -25,6 +25,8 @@ namespace Capstone.DAL
 
         public int VenueId { get; set; }
 
+        public decimal TotalCost { get; set; }
+
       
     }
 }

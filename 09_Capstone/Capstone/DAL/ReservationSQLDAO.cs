@@ -14,6 +14,7 @@ namespace Capstone.DAL
         " (SELECT space.id FROM space JOIN reservation ON space.id = reservation.space_id " +
         " WHERE space.venue_id = @venueId AND start_date <= @startDate AND end_date >= @endDate) " +
         " AND space.venue_id = @venueId;";
+
         private string insertReservationIntoSQL = "INSERT INTO reservation(space_id, number_of_attendees, start_date, end_date, reserved_for) "
         + " OUTPUT inserted.reservation_id AS reservationId, inserted.space_id AS spaceId, "
         + " inserted.number_of_attendees AS numberOfAttendees, inserted.start_date AS startDate, "
@@ -22,6 +23,9 @@ namespace Capstone.DAL
         private string returnReservationVenueName = "SELECT venue.name AS venueName FROM venue "
         + " JOIN space ON venue.id = space.id JOIN reservation ON spaec.id = reservation.space_id "
         + " WHERE reservation_id = @reservationId;";
+
+       
+
         private string connectionString;
         public ReservationSQLDAO(string databaseConnectionString)
         {
@@ -45,13 +49,11 @@ namespace Capstone.DAL
                     string availableSpaces = Convert.ToString(reader["spaceName"]);
                     openSpaces.Add(availableSpaces);
                 }
-                if (openSpaces == null)
-                {
-                    openSpaces.Add("No spaces are available. Please try again");
-                }
+                
                 return openSpaces;
             }
         }
+
         public Reservation CreateReservation(DateTime startDate, DateTime endDate, int numberOfAttendees, string reservedForName, string spaceId)
         {
             Reservation reservation = new Reservation();
@@ -86,9 +88,9 @@ namespace Capstone.DAL
             string startDate = reservation.StartDate.ToString();
             string endDate = reservation.EndDate.ToString();
             string numberOfAteendees = reservation.NumberOfAttendees.ToString();
-            
 
-            reservationString = ($"ConfirmationNumber: {reservationId}\n Venue: {venueName} \n Space: { ")
+            return "";
+           // reservationString = ($"ConfirmationNumber: {reservationId}\n Venue: {venueName} \n Space: { ")
         }
         public string ReturnReservationVenueName(Reservation reservation)
         {
@@ -108,9 +110,9 @@ namespace Capstone.DAL
             }
             return venueName;
 
-        }
+        }             
+
     }
-     
-      
+           
     
 }

@@ -106,7 +106,7 @@ namespace Capstone
 
         public void MenuAtBottomOfDisplayAllSpaces()
         {
-            
+
         }
 
         public void VenueMenuSelection(string venueMenuSelection, int venueIdRequested)
@@ -137,17 +137,7 @@ namespace Capstone
 
                     break;
                 case "2":
-                    Console.WriteLine("What Date would you like to start your reservation? (yyyy-mm-dd)");
-                    DateTime startDate = DateTime.Parse(Console.ReadLine());
-                    Console.WriteLine("How many days would you like?");
-                    int numberOfDays = int.Parse(Console.ReadLine());
-                    Console.WriteLine();
-                    Console.WriteLine("Here's what is available:");
-                    if (reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays)).Count )
-                    foreach (string item in reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays))
-                    {
-                        Console.WriteLine(item);
-                    }
+                    CaseTwoVenueMenu(venueIdRequested);
                     break;
                 case "R":
                     DisplayMainMenu();
@@ -161,14 +151,44 @@ namespace Capstone
             switch (bottomMenuSelection)
             {
                 case "1":
+                    CaseTwoVenueMenu(venueIdRequested);
                     break;
                 case "R":
-                    
+
                     break;
             }
         }
 
-
+        public void CaseTwoVenueMenu(int venueIdRequested)
+        {
+            Console.WriteLine("What Date would you like to start your reservation? (yyyy-mm-dd)");
+            DateTime startDate = DateTime.Parse(Console.ReadLine());
+            Console.WriteLine("How many days would you like?");
+            int numberOfDays = int.Parse(Console.ReadLine());
+            Console.WriteLine();
+            Console.WriteLine("Here's what is available:");
+            if ((reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays)).Count > 0)
+            {
+                foreach (string item in reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays))
+                {
+                    Console.WriteLine(item);
+                }
+            }
+            else
+            {
+                Console.WriteLine("No spaces available, would you like to search again? Y/N");
+                string tryAgain = Console.ReadLine();
+                switch (tryAgain)
+                {
+                    case "Y":
+                        VenueMenu();
+                        break;
+                    case "N":
+                        DisplayMainMenu();
+                        break;
+                }
+            }
+        }
 
 
 

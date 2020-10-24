@@ -13,6 +13,10 @@ namespace Capstone.DAL
 
         private string connectionString;
 
+        private string topFive = "SELECT TOP(5) space.name AS spaceName, daily_rate --* DATEDIFF(DAY, start_date, end_date) " +
+           "AS [Total Price] FROM space  --JOIN reservation ON space.id = reservation.space_id WHERE venue_id = 1 " +
+           "GROUP BY space.name, daily_rate--, start_date, end_date ORDER BY daily_rate DESC;";
+
         private string searchBySpaceId = "SELECT id AS SpaceId, venue_id AS VenueId, name AS SpaceName, "
             + " is_accessible AS IsAccessible, daily_rate AS DailyRate, max_occupancy As MaxOccupancy, "
             + " open_from AS OpenFrom, open_to AS OpenTo FROM space WHERE id = @SpaceId;";
@@ -148,6 +152,27 @@ namespace Capstone.DAL
                 }
             }
             return allSpacesByVenue;
+        }
+
+        public List<Space> TopFiveAvailable(int venueId, int numberOfDays)
+        {
+            List<Space> topSpaces = new List<Space>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand command = new SqlCommand(topFive, conn);
+                command.Parameters.AddWithValue("@venueId", venueId);
+                command.Parameters.Add("daily_rate");
+                Space space = new Space();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    space.DailyRate = Convert.ToDecimal(reader["daily_rate"]);
+                    space.TotalCost = (decimal)numberOfDays * space.DailyRate;
+                    space.Name = Convert.ToString(reader["spaceName"]);
+                    topSpaces.Add(space);
+                }
+            }return topSpaces;
         }
 
     }
