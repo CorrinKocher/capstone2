@@ -14,6 +14,7 @@ namespace Capstone.DAL
         " (SELECT space.id FROM space JOIN reservation ON space.id = reservation.space_id " +
         " WHERE space.venue_id = @venueId AND start_date <= @startDate AND end_date >= @endDate) " +
         " AND space.venue_id = @venueId;";
+       
         private string connectionString;
         public ReservationSQLDAO(string databaseConnectionString)
         {
@@ -37,13 +38,11 @@ namespace Capstone.DAL
                     string availableSpaces = Convert.ToString(reader["spaceName"]);
                     openSpaces.Add(availableSpaces);
                 }
-                if (openSpaces == null)
-                {
-                    openSpaces.Add("No spaces are available. Please try again");
-                }
+                
                 return openSpaces;
             }
         }
+        
     }
 }
 
