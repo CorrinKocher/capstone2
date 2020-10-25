@@ -78,12 +78,12 @@ namespace Capstone.DAL
 
                     venue.VenueId = Convert.ToInt32(reader["VenueId"]);
                     venue.VenueName = Convert.ToString(reader["VenueName"]);
-                    venue.City = Convert.ToString(reader["CityName"]);
+                    venue.CityName = Convert.ToString(reader["CityName"]);
                     venue.State = Convert.ToString(reader["StateAbbreviation"]);
                     venue.Description = Convert.ToString(reader["VenueDescription"]);
 
                 }
-                return ($"\n\n{venue.VenueName}\nLocation: {venue.City}, {venue.State}\nCategories:{Category(venueId)} \n\n{venue.Description}");
+                return ($"\n\n{venue.VenueName}\nLocation: {venue.CityName}, {venue.State}\nCategories:{Category(venueId)} \n\n{venue.Description}");
             }
 
         }

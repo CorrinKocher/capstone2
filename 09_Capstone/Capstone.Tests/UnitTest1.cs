@@ -24,14 +24,15 @@ namespace Capstone.Tests
                 SqlDataReader reader = command.ExecuteReader();
                 int count = 0;
 
-            while (reader.Read())
-            {
+                while (reader.Read())
+                {
                     count += 1;
+                }
+                //Act
+                spaceDao.DisplayAllSpacesByVenueId("1");
+                //Assert
+                Assert.AreEqual(count, spaceDao.DisplayAllSpacesByVenueId("1"));
             }
-            //Act
-            spaceDao.DisplayAllSpacesByVenueId("1");
-            //Assert
-            Assert.AreEqual(count, spaceDao.DisplayAllSpacesByVenueId("1"))
         }
     }
 }
