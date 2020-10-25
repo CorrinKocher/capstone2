@@ -19,8 +19,6 @@ namespace Capstone
         private ReservationSQLDAO reservationDAO;
         private string connectionString;
 
-
-
         public UserInterface(string connectionString)
         {
             this.connectionString = connectionString;
@@ -28,45 +26,19 @@ namespace Capstone
             this.spaceDAO = new SpaceSQLDAO(connectionString);
             this.reservationDAO = new ReservationSQLDAO(connectionString);
         }
-        public bool keepRunning = true;
+
         public void Run()
         {
+            bool done = false;
+            while (!done)
+            {
 
                 DisplayMainMenu();
                 string menuSelection = Console.ReadLine();
-                MainMenuSelection(menuSelection);
-                int venueIdRequested = 0;
-                Console.WriteLine("Please enter the VenueId you would like more information on");
-                venueIdRequested = int.Parse(Console.ReadLine());
-                Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
-                VenueMenu();
-                string venueMenuSelection = Console.ReadLine();
-                VenueMenuSelection(venueMenuSelection, venueIdRequested);
-                Console.WriteLine();
-                Console.ReadLine();
-            
-            //MenuAtBottomOfDisplayAllSpaces();
-
-            //Space space = new Space();
-            //int spaceIdRequested = 0;
+                done = MainMenuSelection(menuSelection);
 
 
-            //DisplayMainMenu();
-            //string menuSelection = Console.ReadLine();
-            //MainMenuSelection(menuSelection);
-
-
-            //Console.WriteLine("Please enter the VenueId you would like more information on");
-            //venueIdRequested = int.Parse(Console.ReadLine());
-
-            //Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
-
-            //Console.WriteLine();
-            //Console.WriteLine("please enter the spaceID you wouldlike to see");
-            //spaceIdRequested = int.Parse(Console.ReadLine());
-            //spaceDAO.CreateSpaceModel(spaceIdRequested);
-
-
+            }
 
         }
 
@@ -79,30 +51,47 @@ namespace Capstone
 
         }
 
-        public void MainMenuSelection(string menuSelection)
+        public bool MainMenuSelection(string menuSelection)
         {
-            switch (menuSelection.ToUpper())
+            switch (menuSelection)
             {
                 case "1":
                     foreach (string venue in venueDAO.GetAllVenueNames())
                     {
                         Console.WriteLine(venue);
                     }
-                    break;
+                    int venueIdRequested = 0;
+                    Console.WriteLine("Please enter the VenueId you would like more information on");
+                    venueIdRequested = int.Parse(Console.ReadLine());
+                    Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
+                    VenueMenu(venueIdRequested);
+
+                    return false;
                 case "Q":
                     Console.WriteLine("Thank you for using our service!");
-                    break;
+                    return true;
             }
+            Console.WriteLine("Please enter a valid selection");
+            return false;
         }
 
-        public void VenueMenu()
+        public void VenueMenu(int venueIdRequested)
         {
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("What would you like to do next?");
-            Console.WriteLine("1) View Spaces");
-            Console.WriteLine("2) Search for Reservation");
-            Console.WriteLine("R) Return to Previous Screen");
+            bool done = false;
+            while (!done)
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("What would you like to do next?");
+                Console.WriteLine("1) View Spaces");
+                Console.WriteLine("2) Search for Reservation");
+                Console.WriteLine("R) Return to Previous Screen");
+                string venueMenuSelection = Console.ReadLine();
+                done = VenueMenuSelection(venueMenuSelection, venueIdRequested);
+                Console.WriteLine();
+                Console.ReadLine();
+            }
+
         }
 
         public void MenuAtBottomOfDisplayAllSpaces()
@@ -110,9 +99,10 @@ namespace Capstone
 
         }
 
-        public void VenueMenuSelection(string venueMenuSelection, int venueIdRequested)
+        public bool VenueMenuSelection(string venueMenuSelection, int venueIdRequested)
         {
-            switch (venueMenuSelection.ToUpper())
+
+            switch (venueMenuSelection)
             {
                 case "1":
                     List<string> spacesList = spaceDAO.DisplayAllSpacesByVenueId(venueIdRequested.ToString());
@@ -130,21 +120,21 @@ namespace Capstone
                     switch (bottomMenuSelection)
                     {
                         case "1":
-                            break;
+                            break; // call makereservation return false;
                         case "R":
+                            return true;
 
-                            break;
                     }
 
                     break;
                 case "2":
                     CaseTwoVenueMenu(venueIdRequested);
-                    break;
+                    return false;
                 case "R":
-                    DisplayMainMenu();
-                    break;
+                    return true;
 
             }
+            return false;
         }
 
         public void BottomMenuSelection(string bottomMenuSelection, int venueIdRequested)
@@ -179,27 +169,16 @@ namespace Capstone
             {
                 Console.WriteLine("No spaces available, would you like to search again? Y/N");
                 string tryAgain = Console.ReadLine();
-                switch (tryAgain)
-                {
-                    case "Y":
-                        VenueMenu();
-                        break;
-                    case "N":
-                        DisplayMainMenu();
-                        break;
-                }
+                //switch (tryAgain)
+                //{
+                //    case "Y":
+                //        VenueMenu();
+                //        break;
+                //    case "N":
+                //        DisplayMainMenu();
+                //        break;
+                //}
             }
         }
-
-
-
-
-
-
-
-
-
-
-
     }
 }
