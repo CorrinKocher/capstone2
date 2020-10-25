@@ -20,5 +20,8 @@ namespace Capstone.DAL
         public DateTime EndDate { get; set; }
 
         public int SpaceId { get; set; }
+        public string SpaceName { get; set; }
+
+        public string VenueName { get; set; }
     }
 }

@@ -20,11 +20,12 @@ namespace Capstone.DAL
         + " inserted.number_of_attendees AS numberOfAttendees, inserted.start_date AS startDate, "
         + " inserted.end_date AS endDate, inserted.reserved_for AS reservedForName "
         + " VALUES ('@spaceId','@numberOfAttendees','@startDate', '@endDate', '@reservedForName');";
-        private string returnReservationVenueName = "SELECT venue.name AS venueName FROM venue "
-        + " JOIN space ON venue.id = space.id JOIN reservation ON spaec.id = reservation.space_id "
+        private string returnReservationVenueNameAndSpaceName = "SELECT venue.name AS venueName, space.name AS spaceName FROM venue "
+        + " JOIN space ON venue.id = space.id JOIN reservation ON space.id = reservation.space_id "
         + " WHERE reservation_id = @reservationId;";
+        
 
-       
+
 
         private string connectionString;
         public ReservationSQLDAO(string databaseConnectionString)
@@ -32,27 +33,27 @@ namespace Capstone.DAL
             this.connectionString = databaseConnectionString;
         }
 
-        public List<string> SearchAvailableSpacesToReserve(int venueId, DateTime startDate, int numberOfDays)
-        {
-            List<string> openSpaces = new List<string>();
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                SqlCommand command = new SqlCommand(searchReservation, conn);
-                command.Parameters.AddWithValue("@venueId", venueId);
-                command.Parameters.AddWithValue("@startDate", startDate);
-                command.Parameters.AddWithValue("@endDate", startDate.AddDays(numberOfDays));
+        //public List<string> SearchAvailableSpacesToReserve(int venueId, DateTime startDate, int numberOfDays)
+        //{
+        //    List<string> openSpaces = new List<string>();
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        conn.Open();
+        //        SqlCommand command = new SqlCommand(searchReservation, conn);
+        //        command.Parameters.AddWithValue("@venueId", venueId);
+        //        command.Parameters.AddWithValue("@startDate", startDate);
+        //        command.Parameters.AddWithValue("@endDate", startDate.AddDays(numberOfDays));
 
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    string availableSpaces = Convert.ToString(reader["spaceName"]);
-                    openSpaces.Add(availableSpaces);
-                }
-                
-                return openSpaces;
-            }
-        }
+        //        SqlDataReader reader = command.ExecuteReader();
+        //        while (reader.Read())
+        //        {
+        //            string availableSpaces = Convert.ToString(reader["spaceName"]);
+        //            openSpaces.Add(availableSpaces);
+        //        }
+
+        //        return openSpaces;
+        //    }
+        //}
 
         public Reservation CreateReservation(DateTime startDate, DateTime endDate, int numberOfAttendees, string reservedForName, string spaceId)
         {
@@ -75,22 +76,22 @@ namespace Capstone.DAL
                     reservation.StartDate = Convert.ToDateTime(reader["startDate"]);
                     reservation.EndDate = Convert.ToDateTime(reader["endDate"]);
                     reservation.ReservedFor = Convert.ToString(reader["reservedForName"]);
-                    reservation.NumberOfAttendees = Convert.ToInt32(reader["numberOfAttendees"]);                                  
+                    reservation.NumberOfAttendees = Convert.ToInt32(reader["numberOfAttendees"]);
                 }
             }
             return reservation;
         }
-        public string CreateReservationConfirmation(Reservation reservation, string venueName)
+        public string CreateReservationConfirmation(Reservation reservation, string venueName, string SpaceName)
         {
             string reservationString;
-            string reservationId = reservation.ReservationId.ToString();
-            string spaceId = reservation.SpaceId.ToString();
+            //string reservationId = reservation.ReservationId.ToString();
             string startDate = reservation.StartDate.ToString();
             string endDate = reservation.EndDate.ToString();
-            string numberOfAteendees = reservation.NumberOfAttendees.ToString();
-
-            return "";
-           // reservationString = ($"ConfirmationNumber: {reservationId}\n Venue: {venueName} \n Space: { ")
+            //string numberOfAteendees = reservation.NumberOfAttendees.ToString();
+            //string reservedFor = reservation.ReservedFor;
+            //need to possible create total cost string here
+            reservationString = ($"ConfirmationNumber: {reservation.ReservationId}\n Venue: {venueName} \n Space: {SpaceName} \n Reserved For: {reservation.ReservedFor} \n Attendees: {reservation.NumberOfAttendees} \n Arrival Date: {startDate} \n Depart Date: {endDate} \n Total Cost : NEED TO MERGE FOR TOTALCOST" );
+            return reservationString;
         }
         public string ReturnReservationVenueName(Reservation reservation)
         {
@@ -99,20 +100,37 @@ namespace Capstone.DAL
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand command = new SqlCommand(returnReservationVenueName, conn);
+                SqlCommand command = new SqlCommand(returnReservationVenueNameAndSpaceName, conn);
                 command.Parameters.AddWithValue("@reservationId", reservation.ReservationId);
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
                 {
+                    reservation.VenueName = Convert.ToString(reader["venueName"]);
                     venueName = Convert.ToString(reader["venueName"]);
                 }
             }
             return venueName;
+        }
+        public string ReturnReservationSpaceName(Reservation reservation)
+        {
+            string spaceName = "";
+            Reservation thisReservation = new Reservation();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand command = new SqlCommand(returnReservationVenueNameAndSpaceName, conn);
+                command.Parameters.AddWithValue("@reservationId", reservation.ReservationId);
+                SqlDataReader reader = command.ExecuteReader();
 
-        }             
+                while (reader.Read())
+                {
+                    reservation.SpaceName = Convert.ToString(reader["spaceName"]);
+                    spaceName = Convert.ToString(reader["spaceName"]);
+                }
+            }
+            return spaceName;
+        }
 
     }
-           
-    
 }
