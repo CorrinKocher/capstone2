@@ -28,22 +28,28 @@ namespace Capstone
             this.spaceDAO = new SpaceSQLDAO(connectionString);
             this.reservationDAO = new ReservationSQLDAO(connectionString);
         }
+        public bool keepRunning = true;
         public void Run()
         {
-            
 
-            DisplayMainMenu();
-            string menuSelection = Console.ReadLine();
-            MainMenuSelection(menuSelection);
-            int venueIdRequested = 0;
-            Console.WriteLine("Please enter the VenueId you would like more information on");
-            venueIdRequested = int.Parse(Console.ReadLine());
-            Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
-            VenueMenu();
-            string venueMenuSelection = Console.ReadLine();
-            VenueMenuSelection(venueMenuSelection, venueIdRequested);
-            Console.WriteLine();
-            Console.ReadLine();
+           
+            while(keepRunning)
+            {
+
+                DisplayMainMenu();
+                string menuSelection = Console.ReadLine();
+                MainMenuSelection(menuSelection);
+            }
+                int venueIdRequested = 0;
+                Console.WriteLine("Please enter the VenueId you would like more information on");
+                venueIdRequested = int.Parse(Console.ReadLine());
+                Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
+                VenueMenu();
+                string venueMenuSelection = Console.ReadLine();
+                VenueMenuSelection(venueMenuSelection, venueIdRequested);
+                Console.WriteLine();
+                Console.ReadLine();
+            
             //MenuAtBottomOfDisplayAllSpaces();
 
             //Space space = new Space();
@@ -72,15 +78,19 @@ namespace Capstone
         public void DisplayMainMenu()
         {
 
+            while(keepRunning)
+            {
+
             Console.WriteLine("What would you like to do ?");
             Console.WriteLine("1) List Venues");
             Console.WriteLine("Q) Quit");
+            }
 
         }
 
         public void MainMenuSelection(string menuSelection)
         {
-            switch (menuSelection)
+            switch (menuSelection.ToUpper())
             {
                 case "1":
                     foreach (string venue in venueDAO.GetAllVenueNames())
@@ -90,6 +100,7 @@ namespace Capstone
                     break;
                 case "Q":
                     Console.WriteLine("Thank you for using our service!");
+                    keepRunning = false;
                     break;
             }
         }
@@ -111,7 +122,7 @@ namespace Capstone
 
         public void VenueMenuSelection(string venueMenuSelection, int venueIdRequested)
         {
-            switch (venueMenuSelection)
+            switch (venueMenuSelection.ToUpper())
             {
                 case "1":
                     List<string> spacesList = spaceDAO.DisplayAllSpacesByVenueId(venueIdRequested.ToString());

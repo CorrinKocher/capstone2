@@ -88,7 +88,7 @@ namespace Capstone.DAL
             return isAccessible;
         }
 
-        
+
         public string ConvertToMonth(string month)
         {
             Dictionary<string, string> Months = new Dictionary<string, string>()
@@ -105,9 +105,9 @@ namespace Capstone.DAL
                 {"10", "October" },
                 {"11", "November" },
                 {"12", "December" },
-                
+
             };
-            if(string.IsNullOrEmpty(month))
+            if (string.IsNullOrEmpty(month))
             {
                 return "Open All Year";
             }
@@ -116,13 +116,13 @@ namespace Capstone.DAL
 
         }
 
-       
 
-        
+
+
 
         public string CreateSpaceString(Space space)
         {
-           
+
             Space newSpace = CreateSpaceModel(space.SpaceId);
             string closeMonth = ConvertToMonth(newSpace.CloseDate);
             string openMonth = ConvertToMonth(newSpace.OpenDate);
@@ -135,7 +135,7 @@ namespace Capstone.DAL
 
         public List<string> DisplayAllSpacesByVenueId(string VenueId)
         {
-           
+
             List<string> allSpacesByVenue = new List<string>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -164,13 +164,14 @@ namespace Capstone.DAL
                 conn.Open();
                 SqlCommand command = new SqlCommand(topFive, conn);
                 command.Parameters.AddWithValue("@venueId", venueId);
-                
+
                 command.Parameters.AddWithValue("startDate", startDate);
                 command.Parameters.AddWithValue("@endDate", startDate.AddDays(numberOfDays));
-                Space space = new Space();
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
+
+                    Space space = new Space();
                     space.DailyRate = Convert.ToDecimal(reader["daily_rate"]);
                     space.TotalCost = (decimal)numberOfDays * space.DailyRate;
                     space.Name = Convert.ToString(reader["spaceName"]);
@@ -185,7 +186,8 @@ namespace Capstone.DAL
                     topSpaceString = ($"{item.SpaceId} {item.Name} {item.DailyRate.ToString("C")} {item.MaximumOccupancy} {item.WheelChairAccessibility} {item.TotalCost.ToString("C")}");
                     topStrings.Add(topSpaceString);
                 }
-            }return topStrings;
+            }
+            return topStrings;
         }
 
     }

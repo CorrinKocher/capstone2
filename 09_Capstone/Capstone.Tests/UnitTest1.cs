@@ -11,10 +11,12 @@ namespace Capstone.Tests
     {
 
         [TestMethod]
-        public void VenueOneReturnsSevenSpaces()
+        public void DisplayAllSpacesShouldReturnSeven()
         {
 
             //Arrange
+            int count = 0;
+            
             SpaceSQLDAO spaceDao = new SpaceSQLDAO(connectionString);
             string sql = "SELECT name FROM space WHERE venue_id = 1;";
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -22,16 +24,16 @@ namespace Capstone.Tests
                 conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader reader = command.ExecuteReader();
-                int count = 0;
-
-            while (reader.Read())
-            {
+               
+                while (reader.Read())
+                {
                     count += 1;
+                }
             }
             //Act
-            spaceDao.DisplayAllSpacesByVenueId("1");
+            List<string>spaceTest = spaceDao.DisplayAllSpacesByVenueId("1");
             //Assert
-            Assert.AreEqual(count, spaceDao.DisplayAllSpacesByVenueId("1"))
+            Assert.AreEqual(count, spaceTest.Count);
         }
     }
 }
