@@ -30,7 +30,7 @@ namespace Capstone
         }
         public void Run()
         {
-
+            
 
             DisplayMainMenu();
             string menuSelection = Console.ReadLine();
@@ -167,9 +167,9 @@ namespace Capstone
             int numberOfDays = int.Parse(Console.ReadLine());
             Console.WriteLine();
             Console.WriteLine("Here's what is available:");
-            if ((spaceDAO.TopFiveAvailable(venueIdRequested, numberOfDays, startDate)).Count > 0)
+            if ((reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays)).Count > 0)
             {
-                foreach(string item in spaceDAO.TopFiveAvailable(venueIdRequested, numberOfDays, startDate))
+                foreach (string item in reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays))
                 {
                     Console.WriteLine(item);
                 }
