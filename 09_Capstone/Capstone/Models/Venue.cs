@@ -17,7 +17,7 @@ namespace Capstone.DAL
 
         public string State { get; set; }
 
-        public string City { get; set; }
+        public string CityName { get; set; }
 
         public string Description { get; set; }
 

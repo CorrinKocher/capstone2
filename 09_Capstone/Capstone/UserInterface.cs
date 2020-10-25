@@ -32,14 +32,9 @@ namespace Capstone
         public void Run()
         {
 
-           
-            while(keepRunning)
-            {
-
                 DisplayMainMenu();
                 string menuSelection = Console.ReadLine();
                 MainMenuSelection(menuSelection);
-            }
                 int venueIdRequested = 0;
                 Console.WriteLine("Please enter the VenueId you would like more information on");
                 venueIdRequested = int.Parse(Console.ReadLine());
@@ -78,13 +73,9 @@ namespace Capstone
         public void DisplayMainMenu()
         {
 
-            while(keepRunning)
-            {
-
             Console.WriteLine("What would you like to do ?");
             Console.WriteLine("1) List Venues");
             Console.WriteLine("Q) Quit");
-            }
 
         }
 
@@ -100,7 +91,6 @@ namespace Capstone
                     break;
                 case "Q":
                     Console.WriteLine("Thank you for using our service!");
-                    keepRunning = false;
                     break;
             }
         }
