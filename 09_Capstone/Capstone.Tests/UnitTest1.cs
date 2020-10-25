@@ -22,8 +22,7 @@ namespace Capstone.Tests
                 conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader reader = command.ExecuteReader();
-                List<>
-                    }
+               int count = 0
 
             while (reader.Read())
             {
