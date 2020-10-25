@@ -22,16 +22,16 @@ namespace Capstone.Tests
                 conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader reader = command.ExecuteReader();
-               int count = 0
+                int count = 0;
 
             while (reader.Read())
             {
-
+                    count += 1;
             }
             //Act
             spaceDao.DisplayAllSpacesByVenueId("1");
             //Assert
-            Assert.AreEqual
+            Assert.AreEqual(count, spaceDao.DisplayAllSpacesByVenueId("1"))
         }
     }
 }
