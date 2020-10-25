@@ -167,9 +167,9 @@ namespace Capstone
             int numberOfDays = int.Parse(Console.ReadLine());
             Console.WriteLine();
             Console.WriteLine("Here's what is available:");
-            if ((reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays)).Count > 0)
+            if ((spaceDAO.TopFiveAvailable(venueIdRequested, numberOfDays, startDate)).Count > 0)
             {
-                foreach (string item in reservationDAO.SearchAvailableSpacesToReserve(venueIdRequested, startDate, numberOfDays))
+                foreach(string item in spaceDAO.TopFiveAvailable(venueIdRequested, numberOfDays, startDate))
                 {
                     Console.WriteLine(item);
                 }

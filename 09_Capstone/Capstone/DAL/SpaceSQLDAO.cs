@@ -13,9 +13,10 @@ namespace Capstone.DAL
 
         private string connectionString;
 
-        private string topFive = "SELECT TOP(5) space.name AS spaceName, daily_rate --* DATEDIFF(DAY, start_date, end_date) " +
-           "AS [Total Price] FROM space  --JOIN reservation ON space.id = reservation.space_id WHERE venue_id = 1 " +
-           "GROUP BY space.name, daily_rate--, start_date, end_date ORDER BY daily_rate DESC;";
+        private string topFive = "SELECT TOP(5) space.id AS spaceid, space.name as spacename, is_accessible, max_occupancy, daily_rate " +
+            " FROM space WHERE space.id NOT IN (SELECT space.id FROM space JOIN reservation ON space.id = reservation.space_id " +
+        " WHERE space.venue_id = @venueId AND start_date <= @startDate AND end_date >= @endDate) AND venue_id = @venueId GROUP BY space.name, daily_rate, is_accessible, space.id, max_occupancy " +
+            " ORDER BY daily_rate DESC;";
 
         private string searchBySpaceId = "SELECT id AS SpaceId, venue_id AS VenueId, name AS SpaceName, "
             + " is_accessible AS IsAccessible, daily_rate AS DailyRate, max_occupancy As MaxOccupancy, "
@@ -154,15 +155,18 @@ namespace Capstone.DAL
             return allSpacesByVenue;
         }
 
-        public List<Space> TopFiveAvailable(int venueId, int numberOfDays)
+        public List<string> TopFiveAvailable(int venueId, int numberOfDays, DateTime startDate)
         {
             List<Space> topSpaces = new List<Space>();
+            List<string> topStrings = new List<string>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
                 SqlCommand command = new SqlCommand(topFive, conn);
                 command.Parameters.AddWithValue("@venueId", venueId);
-                command.Parameters.Add("daily_rate");
+                
+                command.Parameters.AddWithValue("startDate", startDate);
+                command.Parameters.AddWithValue("@endDate", startDate.AddDays(numberOfDays));
                 Space space = new Space();
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -170,9 +174,18 @@ namespace Capstone.DAL
                     space.DailyRate = Convert.ToDecimal(reader["daily_rate"]);
                     space.TotalCost = (decimal)numberOfDays * space.DailyRate;
                     space.Name = Convert.ToString(reader["spaceName"]);
+                    space.SpaceId = Convert.ToInt32(reader["SpaceId"]);
+                    space.MaximumOccupancy = Convert.ToInt32(reader["max_occupancy"]);
+                    space.WheelChairAccessibility = Convert.ToBoolean(reader["is_accessible"]);
                     topSpaces.Add(space);
                 }
-            }return topSpaces;
+                foreach (Space item in topSpaces)
+                {
+                    string topSpaceString = "";
+                    topSpaceString = ($"{item.SpaceId} {item.Name} {item.DailyRate.ToString("C")} {item.MaximumOccupancy} {item.WheelChairAccessibility} {item.TotalCost.ToString("C")}");
+                    topStrings.Add(topSpaceString);
+                }
+            }return topStrings;
         }
 
     }
