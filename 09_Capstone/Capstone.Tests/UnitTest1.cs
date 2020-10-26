@@ -25,24 +25,41 @@ namespace Capstone.Tests
                 conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
 
+
                 SqlDataReader reader = command.ExecuteReader();
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 257758bd0081ef7b08fc0363b855fed862de1586
 
                 while (reader.Read())
                 {
  
                     count += 1;
                 }
+<<<<<<< HEAD
                 conn.Close();
+=======
+
+
+
+
+>>>>>>> 257758bd0081ef7b08fc0363b855fed862de1586
             }
             
             //Act
-            List<string>spaceTest = spaceDao.DisplayAllSpacesByVenueId("1");
+            List<string> spaceTest = spaceDao.DisplayAllSpacesByVenueId("1");
             //Assert
             Assert.AreEqual(count, spaceTest.Count);
 
 
         }
-               
+        //[TestMethod]
 
-    }
+        //public void
+
+
+    } 
 }

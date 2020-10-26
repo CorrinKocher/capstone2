@@ -26,7 +26,9 @@ namespace Capstone
             this.spaceDAO = new SpaceSQLDAO(connectionString);
             this.reservationDAO = new ReservationSQLDAO(connectionString);
         }
-
+        /// <summary>
+        /// this starts and stops the console from displaying all other menus
+        /// </summary>
         public void Run()
         {
             bool done = false;
@@ -41,7 +43,9 @@ namespace Capstone
             }
 
         }
-
+        /// <summary>
+        /// this method just displays the Main Menu options
+        /// </summary>
         public void DisplayMainMenu()
         {
 
@@ -50,7 +54,12 @@ namespace Capstone
             Console.WriteLine("Q) Quit");
 
         }
-
+        /// <summary>
+        /// This method allows you to continue to navigate the main
+        /// menu and venue menu as long as you dont select quit
+        /// </summary>
+        /// <param name="menuSelection"></param>
+        /// <returns></returns>
         public bool MainMenuSelection(string menuSelection)
         {
             switch (menuSelection)
@@ -74,7 +83,11 @@ namespace Capstone
             Console.WriteLine("Please enter a valid selection");
             return false;
         }
-
+        /// <summary>
+        /// this method displays the venue menu options and creates a variable to insert into
+        /// the venue menue selection method
+        /// </summary>
+        /// <param name="venueIdRequested"></param>
         public void VenueMenu(int venueIdRequested)
         {
             bool done = false;
@@ -95,13 +108,22 @@ namespace Capstone
         }
 
                      
-
+        /// <summary>
+        /// this method takes in the selection from the user from VenueMenu
+        /// and allows the user to continue to navigate the venue options until they select
+        /// R to return the previous screen. This method calls the method search for a reservation
+        /// (below) so that a reservation can be made by the user.
+        /// </summary>
+        /// <param name="venueMenuSelection"></param>
+        /// <param name="venueIdRequested"></param>
+        /// <returns></returns>
         public bool VenueMenuSelection(string venueMenuSelection, int venueIdRequested)
         {
 
             switch (venueMenuSelection)
             {
                 case "1":
+                    //Space space = new Space()
                     List<string> spacesList = spaceDAO.DisplayAllSpacesByVenueId(venueIdRequested.ToString());
 
                     foreach (string item in spacesList)
@@ -135,7 +157,12 @@ namespace Capstone
             return false;
         }
 
-    
+    /// <summary>
+    /// this method retrieves data from the user needed to create a reservation and
+    /// allows the user to continue to make reservations
+    /// </summary>
+    /// <param name="venueIdRequested"></param>
+    /// <returns></returns>
         public bool SearchForAReservation(int venueIdRequested)
         {
             bool isAvailable = true;

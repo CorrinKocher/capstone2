@@ -6,7 +6,7 @@ using System.Text;
 namespace Capstone.DAL
 {
     /// <summary>
-    /// methods to make: CreateSpaceModel, ViewAllSpacesByVenueId,  convertwheelchairbooltostring, convertDateIntsToMonthsString
+    /// This class retrieves information on spaces from the DB
     /// </summary>
     public class SpaceSQLDAO
     {
@@ -18,9 +18,9 @@ namespace Capstone.DAL
         " WHERE space.venue_id = @venueId AND start_date <= @startDate AND end_date >= @endDate) AND max_occupancy >= @max_occupancy AND venue_id = @venueId GROUP BY space.name, daily_rate, is_accessible, space.id, max_occupancy " +
             " ORDER BY daily_rate DESC;";
 
-        private string searchBySpaceId = "SELECT id AS SpaceId, venue_id AS VenueId, name AS SpaceName, "
+        private string searchByVenueId = "SELECT id AS SpaceId, venue_id AS VenueId, name AS SpaceName, "
             + " is_accessible AS IsAccessible, daily_rate AS DailyRate, max_occupancy As MaxOccupancy, "
-            + " open_from AS OpenFrom, open_to AS OpenTo FROM space WHERE id = @SpaceId;";
+            + " open_from AS OpenFrom, open_to AS OpenTo FROM space WHERE venue_id = @VenueId";
 
         private string returnSpacesAccessability = "SELECT is_accessible AS IsAccessible FROM space WHERE id = @SpaceId;";
 
@@ -32,15 +32,25 @@ namespace Capstone.DAL
         {
             this.connectionString = databaseConnectionString;
         }
-
-        public Space CreateSpaceModel(int spaceId)
+        /// <summary>
+        /// 
+        ///This method retrieves space properties from the DB and creates a space object in .NET
+        /// </summary>
+        /// <param name="spaceId"></param>
+        /// <returns></returns>
+        public List<string> DisplayAllSpacesByVenueId(string venueId)
         {
+            List<string> allSpacesByVenue = new List<string>();
+            String spaceString = "";
+            string isAccessible = "";
+            string openMonth = "";
+            string closeMonth = "";
             Space space = new Space();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand command = new SqlCommand(searchBySpaceId, conn);
-                command.Parameters.AddWithValue("@SpaceId", spaceId);
+                SqlCommand command = new SqlCommand(searchByVenueId, conn);
+                command.Parameters.AddWithValue("@VenueId", venueId);
 
                 SqlDataReader reader = command.ExecuteReader();
 
@@ -54,40 +64,31 @@ namespace Capstone.DAL
                     space.MaximumOccupancy = Convert.ToInt32(reader["MaxOccupancy"]);
                     space.OpenDate = Convert.ToString(reader["OpenFrom"]);
                     space.CloseDate = Convert.ToString(reader["OpenTo"]);
+                    closeMonth = ConvertToMonth(space.CloseDate);
+                    openMonth = ConvertToMonth(space.OpenDate);
 
-                }
-
-            }
-            return space;
-
-        }
-        public string ConvertWheelChairBoolToString(Space thisSpace)
-        {
-            string isAccessible = "";
-            Space space = new Space();
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                SqlCommand command = new SqlCommand(returnSpacesAccessability, conn);
-                command.Parameters.AddWithValue("@SpaceId", thisSpace.SpaceId);
-
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    space.WheelChairAccessibility = Convert.ToBoolean(reader["IsAccessible"]);
-                    if (space.WheelChairAccessibility)
+                   if(space.WheelChairAccessibility)
                     {
-                        isAccessible = "Yes";
+                        isAccessible = "No";
                     }
-                    isAccessible = "No";
+                    isAccessible = "Yes";
+
+                    spaceString = ($"{space.SpaceId}) {space.Name} {openMonth} {closeMonth} {space.DailyRate} {space.MaximumOccupancy} WheelChair Accessibility: {isAccessible}");
+                    allSpacesByVenue.Add(spaceString);
 
                 }
 
-            }
-            return isAccessible;
-        }
 
+
+                return allSpacesByVenue;
+
+            }
+            
+
+
+
+        }
+    
 
         public string ConvertToMonth(string month)
         {
@@ -115,46 +116,17 @@ namespace Capstone.DAL
             return Months[month];
 
         }
+                        
 
-
-
-
-
-        public string CreateSpaceString(Space space)
-        {
-
-            Space newSpace = CreateSpaceModel(space.SpaceId);
-            string closeMonth = ConvertToMonth(newSpace.CloseDate);
-            string openMonth = ConvertToMonth(newSpace.OpenDate);
-            string accessibility = ConvertWheelChairBoolToString(newSpace); // do we need later?
-
-
-            return ($"{newSpace.SpaceId}) {newSpace.Name} {openMonth} {closeMonth} {newSpace.DailyRate} {newSpace.MaximumOccupancy}");
-
-        }
-
-        public List<string> DisplayAllSpacesByVenueId(string VenueId)
-        {
-
-            List<string> allSpacesByVenue = new List<string>();
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                SqlCommand command = new SqlCommand(returnAllSpacesByVenueId, conn);
-                command.Parameters.AddWithValue("@VenueId", VenueId);
-
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Space space = new Space();
-                    space.SpaceId = Convert.ToInt32(reader["SpaceId"]);
-                    allSpacesByVenue.Add(CreateSpaceString(space));
-                }
-            }
-            return allSpacesByVenue;
-        }
-
+      
+        /// <summary>
+        /// displays the top5 available spaces for that venue based on client needs
+        /// </summary>
+        /// <param name="venueId"></param>
+        /// <param name="numberOfDays"></param>
+        /// <param name="startDate"></param>
+        /// <param name="numberOfAttendees"></param>
+        /// <returns></returns>
         public List<string> TopFiveAvailable(int venueId, int numberOfDays, DateTime startDate, int numberOfAttendees)
         {
             List<Space> topSpaces = new List<Space>();
