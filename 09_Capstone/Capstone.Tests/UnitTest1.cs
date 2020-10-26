@@ -1,5 +1,6 @@
 using Capstone.DAL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
@@ -18,29 +19,22 @@ namespace Capstone.Tests
             int count = 0;
 
             SpaceSQLDAO spaceDao = new SpaceSQLDAO(connectionString);
-            string sql = "SELECT name FROM space WHERE venue_id = 1;";
+            string sql = "SELECT name, id FROM space WHERE venue_id = 1;";
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
 
                 SqlDataReader reader = command.ExecuteReader();
- 
-                       
-
-                                                       
-
 
                 while (reader.Read())
                 {
+ 
                     count += 1;
                 }
-
-
-             
-
+                conn.Close();
             }
-
+            
             //Act
             List<string>spaceTest = spaceDao.DisplayAllSpacesByVenueId("1");
             //Assert
