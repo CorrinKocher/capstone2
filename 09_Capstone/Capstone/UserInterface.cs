@@ -88,16 +88,13 @@ namespace Capstone
                 Console.WriteLine("R) Return to Previous Screen");
                 string venueMenuSelection = Console.ReadLine();
                 done = VenueMenuSelection(venueMenuSelection, venueIdRequested);
-                Console.WriteLine();
-                Console.ReadLine();
+               
             }
 
-        }
-
-        public void MenuAtBottomOfDisplayAllSpaces()
-        {
 
         }
+
+                     
 
         public bool VenueMenuSelection(string venueMenuSelection, int venueIdRequested)
         {
@@ -120,7 +117,8 @@ namespace Capstone
                     switch (bottomMenuSelection)
                     {
                         case "1":
-                            break; // call makereservation return false;
+                            SearchForAReservation(venueIdRequested);
+                            break;
                         case "R":
                             return true;
 
@@ -128,7 +126,7 @@ namespace Capstone
 
                     break;
                 case "2":
-                    CaseTwoVenueMenu(venueIdRequested);
+                    SearchForAReservation(venueIdRequested);
                     return false;
                 case "R":
                     return true;
@@ -137,48 +135,100 @@ namespace Capstone
             return false;
         }
 
-        public void BottomMenuSelection(string bottomMenuSelection, int venueIdRequested)
+    
+        public bool SearchForAReservation(int venueIdRequested)
         {
-            switch (bottomMenuSelection)
+            bool isAvailable = true;
+            bool done = false;
+            while (!done)
             {
-                case "1":
-                    CaseTwoVenueMenu(venueIdRequested);
-                    break;
-                case "R":
+                string venueSpaceCost = "";
+                Reservation reservation = new Reservation();
+                int spaceId = 0;
+                string johnFulton = "";
+                int numberOfAttendees = 0;
+                Console.WriteLine("What Date would you like to start your reservation? (yyyy-mm-dd)");
 
-                    break;
-            }
-        }
-
-        public void CaseTwoVenueMenu(int venueIdRequested)
-        {
-            Console.WriteLine("What Date would you like to start your reservation? (yyyy-mm-dd)");
-            DateTime startDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("How many days would you like?");
-            int numberOfDays = int.Parse(Console.ReadLine());
-            Console.WriteLine();
-            Console.WriteLine("Here's what is available:");
-            if ((spaceDAO.TopFiveAvailable(venueIdRequested, numberOfDays, startDate)).Count > 0)
-            {
-                foreach (string item in spaceDAO.TopFiveAvailable(venueIdRequested, numberOfDays, startDate))
+                DateTime startDate = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("How many days would you like?");
+                int numberOfDays = int.Parse(Console.ReadLine());
+                Console.WriteLine("How many people will be in attendance?");
+                numberOfAttendees = int.Parse(Console.ReadLine());
+                Console.WriteLine();
+                Console.WriteLine("Here's what is available:");
+                if ((spaceDAO.TopFiveAvailable(venueIdRequested, numberOfDays, startDate, numberOfAttendees)).Count > 0)
                 {
-                    Console.WriteLine(item);
+                    foreach (string item in spaceDAO.TopFiveAvailable(venueIdRequested, numberOfDays, startDate, numberOfAttendees))
+                    {
+
+                        Console.WriteLine(item);
+                    }
+                    Console.WriteLine("What space would you like to reserve?");
+                    spaceId = int.Parse(Console.ReadLine());
+                    Console.WriteLine("Who is this reservation for?");
+                    johnFulton = Console.ReadLine();
+                    DateTime endDate = startDate.AddDays(numberOfDays);
+                    isAvailable = reservationDAO.CheckIfSpaceIsAvailable(startDate, endDate, numberOfAttendees, spaceId);
+                    if (isAvailable == true)
+                    {
+                        reservation = reservationDAO.CreateReservation(startDate, endDate, numberOfAttendees, johnFulton, spaceId);
+                        venueSpaceCost = reservationDAO.ReturnReservationVenueNameTotalCost(reservation, numberOfDays);
+                        Console.WriteLine(reservationDAO.CreateReservationConfirmation(reservation, venueSpaceCost));
+                        Console.WriteLine("Do you want to make another reservation? y/n");
+                        if (Console.ReadLine() == "y")
+                        {
+                            return false;
+
+                        }
+                        else
+                        {
+                            done = !done;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No spaces available, would you like to search again? Y/N");
+                        string tryAgain = Console.ReadLine();
+                        switch (tryAgain)
+                        {
+                            case "Y":
+                                return false;
+
+                            case "N":
+                                return true;
+
+                        }
+                    }
+                    return false;
+
                 }
+                else
+                {
+                    Console.WriteLine("No spaces available, would you like to search again? Y/N");
+                    string tryAgain = Console.ReadLine();
+                    switch (tryAgain)
+                    {
+                        case "Y":
+                            return false;
+
+                        case "N":
+                            return true;
+
+                    }
+                }
+              
             }
-            else
-            {
-                Console.WriteLine("No spaces available, would you like to search again? Y/N");
-                string tryAgain = Console.ReadLine();
-                //switch (tryAgain)
-                //{
-                //    case "Y":
-                //        VenueMenu();
-                //        break;
-                //    case "N":
-                //        DisplayMainMenu();
-                //        break;
-                //}
-            }
+            return false;
+
+
         }
     }
-}
+}   
+        
+        
+        
+        
+        
+        
+        
+
