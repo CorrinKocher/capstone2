@@ -15,7 +15,7 @@ namespace Capstone.DAL
 
         private string topFive = "SELECT TOP(5) space.id AS spaceid, space.name as spacename, is_accessible, max_occupancy, daily_rate " +
             " FROM space WHERE space.id NOT IN (SELECT space.id FROM space JOIN reservation ON space.id = reservation.space_id " +
-        " WHERE space.venue_id = @venueId AND start_date <= @startDate AND end_date >= @endDate) AND venue_id = @venueId GROUP BY space.name, daily_rate, is_accessible, space.id, max_occupancy " +
+        " WHERE space.venue_id = @venueId AND start_date <= @startDate AND end_date >= @endDate) AND max_occupancy >= @max_occupancy AND venue_id = @venueId GROUP BY space.name, daily_rate, is_accessible, space.id, max_occupancy " +
             " ORDER BY daily_rate DESC;";
 
         private string searchBySpaceId = "SELECT id AS SpaceId, venue_id AS VenueId, name AS SpaceName, "
@@ -155,7 +155,7 @@ namespace Capstone.DAL
             return allSpacesByVenue;
         }
 
-        public List<string> TopFiveAvailable(int venueId, int numberOfDays, DateTime startDate)
+        public List<string> TopFiveAvailable(int venueId, int numberOfDays, DateTime startDate, int numberOfAttendees)
         {
             List<Space> topSpaces = new List<Space>();
             List<string> topStrings = new List<string>();
@@ -164,8 +164,8 @@ namespace Capstone.DAL
                 conn.Open();
                 SqlCommand command = new SqlCommand(topFive, conn);
                 command.Parameters.AddWithValue("@venueId", venueId);
-
-                command.Parameters.AddWithValue("startDate", startDate);
+                command.Parameters.AddWithValue("@max_occupancy",numberOfAttendees);
+                command.Parameters.AddWithValue("@startDate", startDate);
                 command.Parameters.AddWithValue("@endDate", startDate.AddDays(numberOfDays));
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())

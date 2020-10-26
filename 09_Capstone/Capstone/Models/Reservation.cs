@@ -23,5 +23,7 @@ namespace Capstone.DAL
         public string SpaceName { get; set; }
 
         public string VenueName { get; set; }
+
+        public decimal TotalCost { get; set; }
     }
 }
