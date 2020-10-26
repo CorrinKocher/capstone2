@@ -25,8 +25,7 @@ namespace Capstone.Tests
                 SqlCommand command = new SqlCommand(sql, conn);
 
                 SqlDataReader reader = command.ExecuteReader();                          
-
-                                                       
+                                                                      
 
                 while (reader.Read())
                 {
@@ -42,6 +41,9 @@ namespace Capstone.Tests
             }
 
         }
+        [TestMethod]
+
+        public void 
                
 
     }

@@ -36,6 +36,15 @@ namespace Capstone.DAL
         }
 
 
+        /// <summary>
+        /// This method inserts a reservation into the system
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="numberOfAttendees"></param>
+        /// <param name="reservedForName"></param>
+        /// <param name="spaceId"></param>
+        /// <returns></returns>
 
         public Reservation CreateReservation(DateTime startDate, DateTime endDate, int numberOfAttendees, string reservedForName, int spaceId)
         {
@@ -63,6 +72,12 @@ namespace Capstone.DAL
             }
             return reservation;
         }
+        /// <summary>
+        /// this method creates a reservation confirmation
+        /// </summary>
+        /// <param name="reservation"></param>
+        /// <param name="venueSpaceTotalCost"></param>
+        /// <returns></returns>
         public string CreateReservationConfirmation(Reservation reservation, string venueSpaceTotalCost)
         {
 
@@ -73,6 +88,13 @@ namespace Capstone.DAL
             reservationString = ($"ConfirmationNumber: {reservation.ReservationId}\n Venue: {venueSpaceCost[0]} \n Space: {venueSpaceCost[1]} \n Reserved For: {reservation.ReservedFor} \n Attendees: {reservation.NumberOfAttendees} \n Arrival Date: {startDate} \n Depart Date: {endDate} \n Total Cost: {venueSpaceCost[2]} ");
             return reservationString;
         }
+        /// <summary>
+        /// this method calculates the total cost of a reservation, and obtains the venue/space names associated
+        /// with a reservation. to be returned in the createReservationConfirmaion method
+        /// </summary>
+        /// <param name="reservation"></param>
+        /// <param name="numberOfDays"></param>
+        /// <returns></returns>
         public string ReturnReservationVenueNameTotalCost(Reservation reservation, int numberOfDays)
         {
             decimal totalCost = 0.00M;
@@ -100,6 +122,14 @@ namespace Capstone.DAL
             venueSpacetotalCost = ($"{venueName} | {spaceName} | {totalCost.ToString("C")}");
             return venueSpacetotalCost;
         }
+        /// <summary>
+        /// This method checks if the space requested by the user is available for reservation
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="numberOfAttendees"></param>
+        /// <param name="spaceId"></param>
+        /// <returns></returns>
         public bool CheckIfSpaceIsAvailable(DateTime startDate, DateTime endDate, int numberOfAttendees, int spaceId)
         {
             

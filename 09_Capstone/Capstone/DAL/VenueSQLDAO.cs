@@ -9,16 +9,18 @@ using System.Transactions;
 namespace Capstone.DAL
 {
     /// <summary>
-    /// Methods: DisplayAllVenues- do a join to category_venue, SelectVenue, ReturnAllAvailableDatesForAVenue, DisplayVenueDetails
+    /// Methods: This class retrieves, inserts venues from SQL
     /// </summary>
     public class VenueSQLDAO
     {
-        private string searchByVendorId = "SELECT venue.id AS VenueId, venue.name AS VenueName, city.name AS CityName, venue.description AS VenueDescription, city.state_abbreviation AS StateAbbreviation FROM venue JOIN city ON venue.city_id = city.id WHERE venue.id = @venueid;";
-        // private string searchByVendorId = "SELECT * FROM venue JOIN category_venue "
-        //     + " ON venue.id = category_venue.venue_id JOIN category ON category_venue.category_id "
-        //    + " = category.id JOIN city ON venue.city_id = city.id WHERE venue.id = @venue.id;";
+        private string searchByVendorId = "SELECT venue.id AS VenueId, " +
+            " venue.name AS VenueName, city.name AS CityName, venue.description AS VenueDescription, " +
+            " city.state_abbreviation AS StateAbbreviation FROM venue JOIN city ON venue.city_id = city.id " +
+            " WHERE venue.id = @venueid;";
+       
         private string connectionString;
-        private string categoryName = "SELECT category.name AS CategoryName FROM category JOIN category_venue ON category.id = category_venue.category_id WHERE venue_id = @venueid;";
+        private string categoryName = "SELECT category.name AS CategoryName FROM category " +
+            " JOIN category_venue ON category.id = category_venue.category_id WHERE venue_id = @venueid;";
 
         /// <summary>
         /// Creates a new sql based venue dao
@@ -30,7 +32,10 @@ namespace Capstone.DAL
         }
 
 
-
+        /// <summary>
+        /// This method retrieves a list of all the venues in the DB
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetAllVenueNames()
         {
 
@@ -60,7 +65,12 @@ namespace Capstone.DAL
 
             return venueString;
         }
-
+        /// <summary>
+        /// This method displays the venue details, including category information retrieved in 
+        /// "retrieve category for venue
+        /// </summary>
+        /// <param name="venueId"></param>
+        /// <returns></returns>
         public string DisplayVenueDetails(int venueId)
         {
             Venue venue = new Venue();
@@ -70,8 +80,8 @@ namespace Capstone.DAL
                 SqlCommand command = new SqlCommand(searchByVendorId, conn);
                 command.Parameters.AddWithValue("@venueid", venueId);
 
-                SqlDataReader reader = command.ExecuteReader(); //System.Data.SqlClient.SqlException: 'Incorrect syntax near '.'.
-                                                                //Must declare the scalar variable "@venue".'
+                SqlDataReader reader = command.ExecuteReader(); 
+                                                                
 
                 while (reader.Read())
                 {
@@ -83,12 +93,16 @@ namespace Capstone.DAL
                     venue.Description = Convert.ToString(reader["VenueDescription"]);
 
                 }
-                return ($"\n\n{venue.VenueName}\nLocation: {venue.CityName}, {venue.State}\nCategories:{Category(venueId)} \n\n{venue.Description}");
+                return ($"\n\n{venue.VenueName}\nLocation: {venue.CityName}, {venue.State}\nCategories:{RetreiveCategoryForVenue(venueId)} \n\n{venue.Description}");
             }
 
         }
-
-        public string Category(int venueId)
+        /// <summary>
+        /// This method gets the venues categories from theDB
+        /// </summary>
+        /// <param name="venueId"></param>
+        /// <returns></returns>
+        public string RetreiveCategoryForVenue(int venueId)
         {
             Venue venue = new Venue();
             using (SqlConnection conn = new SqlConnection(connectionString))
