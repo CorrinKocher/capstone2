@@ -72,9 +72,15 @@ namespace Capstone
                     int venueIdRequested = 0;
                     Console.WriteLine("Please enter the VenueId you would like more information on");
                     venueIdRequested = int.Parse(Console.ReadLine());
-                    Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
-                    VenueMenu(venueIdRequested);
+                    if (venueIdRequested <= 15)
+                    {
 
+                        Console.WriteLine(venueDAO.DisplayVenueDetails(venueIdRequested));
+                        VenueMenu(venueIdRequested);
+
+                        return false;
+                    }
+                    Console.WriteLine("Please enter a valid selection");
                     return false;
                 case "Q":
                     Console.WriteLine("Thank you for using our service!");
@@ -101,13 +107,13 @@ namespace Capstone
                 Console.WriteLine("R) Return to Previous Screen");
                 string venueMenuSelection = Console.ReadLine().ToUpper();
                 done = VenueMenuSelection(venueMenuSelection, venueIdRequested);
-               
+
             }
 
 
         }
 
-                     
+
         /// <summary>
         /// this method takes in the selection from the user from VenueMenu
         /// and allows the user to continue to navigate the venue options until they select
@@ -157,12 +163,12 @@ namespace Capstone
             return false;
         }
 
-    /// <summary>
-    /// this method retrieves data from the user needed to create a reservation and
-    /// allows the user to continue to make reservations
-    /// </summary>
-    /// <param name="venueIdRequested"></param>
-    /// <returns></returns>
+        /// <summary>
+        /// this method retrieves data from the user needed to create a reservation and
+        /// allows the user to continue to make reservations
+        /// </summary>
+        /// <param name="venueIdRequested"></param>
+        /// <returns></returns>
         public bool SearchForAReservation(int venueIdRequested)
         {
             bool isAvailable = true;
@@ -243,19 +249,19 @@ namespace Capstone
 
                     }
                 }
-              
+
             }
             return false;
 
 
         }
     }
-}   
-        
-        
-        
-        
-        
-        
-        
+}
+
+
+
+
+
+
+
 
