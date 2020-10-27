@@ -76,7 +76,7 @@ namespace Capstone.DAL
                         isAccessible = "Yes";
                     }
 
-                    spaceString = ($"{space.SpaceId}) {space.Name} {openMonth} {closeMonth} {space.DailyRate} {space.MaximumOccupancy} WheelChair Accessibility: {isAccessible}");
+                    spaceString = ($"{space.SpaceId}) Name: {space.Name} | Open:{openMonth} | Closed:{closeMonth} | Rate/Day:{space.DailyRate.ToString("C")} | Max Occupancy: {space.MaximumOccupancy} | WheelChair Accessibility: {isAccessible} ");
                     allSpacesByVenue.Add(spaceString);
 
                 }
@@ -113,7 +113,7 @@ namespace Capstone.DAL
             };
             if (string.IsNullOrEmpty(month))
             {
-                return "Open All Year";
+                return "N/A";
             }
 
             return Months[month];
@@ -158,7 +158,7 @@ namespace Capstone.DAL
                 foreach (Space item in topSpaces)
                 {
                     string topSpaceString = "";
-                    topSpaceString = ($"{item.SpaceId} {item.Name} {item.DailyRate.ToString("C")} {item.MaximumOccupancy} {item.WheelChairAccessibility} {item.TotalCost.ToString("C")}");
+                    topSpaceString = ($"{item.SpaceId} | Name: {item.Name} | Rate/Day: {item.DailyRate.ToString("C")} | Max Occupancy: {item.MaximumOccupancy} | Wheelchair Accessible: {item.WheelChairAccessibility} | Total: {item.TotalCost.ToString("C")}");
                     topStrings.Add(topSpaceString);
                 }
             }
