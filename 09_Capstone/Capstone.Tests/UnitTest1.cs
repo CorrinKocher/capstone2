@@ -44,9 +44,19 @@ namespace Capstone.Tests
 
 
         }
-        //[TestMethod]
+        [TestMethod]
 
-        //public void
+        public void MonthTenReturnsOctober()
+        {
+            //Arrange
+            string month = "10";
+            SpaceSQLDAO dao = new SpaceSQLDAO(connectionString);
+            //Act
+            string result = dao.ConvertToMonth(month);
+            string expected = "October";
+            //Assert
+            Assert.AreEqual(expected, result);
+        }
 
 
     } 

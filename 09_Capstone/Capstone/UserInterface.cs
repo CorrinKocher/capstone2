@@ -131,7 +131,7 @@ namespace Capstone
                 case "1":
                     //Space space = new Space()
                     List<string> spacesList = spaceDAO.DisplayAllSpacesByVenueId(venueIdRequested.ToString());
-
+                    Console.WriteLine("Spaces:");
                     foreach (string item in spacesList)
                     {
                         Console.WriteLine(item);
