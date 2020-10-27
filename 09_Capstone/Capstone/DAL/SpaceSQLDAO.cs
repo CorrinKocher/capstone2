@@ -22,9 +22,9 @@ namespace Capstone.DAL
             + " is_accessible AS IsAccessible, daily_rate AS DailyRate, max_occupancy As MaxOccupancy, "
             + " open_from AS OpenFrom, open_to AS OpenTo FROM space WHERE venue_id = @VenueId";
 
-        private string returnSpacesAccessability = "SELECT is_accessible AS IsAccessible FROM space WHERE id = @SpaceId;";
+       // private string returnSpacesAccessability = "SELECT is_accessible AS IsAccessible FROM space WHERE id = @SpaceId;";
 
-        private string returnAllSpacesByVenueId = "SELECT id AS SpaceId FROM space WHERE venue_id = @VenueId;";
+        //private string returnAllSpacesByVenueId = "SELECT id AS SpaceId FROM space WHERE venue_id = @VenueId;";
 
 
 
@@ -80,16 +80,10 @@ namespace Capstone.DAL
                     allSpacesByVenue.Add(spaceString);
 
                 }
-
-
-
+                               
                 return allSpacesByVenue;
 
             }
-
-
-
-
         }
 
 
@@ -115,9 +109,7 @@ namespace Capstone.DAL
             {
                 return "N/A";
             }
-
             return Months[month];
-
         }
 
 
