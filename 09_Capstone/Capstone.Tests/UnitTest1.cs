@@ -31,12 +31,12 @@ namespace Capstone.Tests
 
                 while (reader.Read())
                 {
- 
+
                     count += 1;
                 }
 
             }
-            
+
             //Act
             List<string> spaceTest = spaceDao.DisplayAllSpacesByVenueId("1");
             //Assert
@@ -58,6 +58,55 @@ namespace Capstone.Tests
             Assert.AreEqual(expected, result);
         }
 
+        [TestMethod]
+        public void AddCityTest()
+        {
+            int countBefore = 0;
+            int countAfter = 0;
 
-    } 
+
+
+            //Arrange
+
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand command = new SqlCommand(
+                    "SELECT count(*) FROM reservation;", conn);
+
+                countBefore = (int)command.ExecuteScalar();
+            }
+
+            ReservationSQLDAO dao = new ReservationSQLDAO(connectionString);
+            Reservation reservation = new Reservation();
+            reservation.SpaceId = 1;
+            reservation.StartDate = Convert.ToDateTime("2070-10-10");
+            reservation.EndDate = Convert.ToDateTime("2070-10-15");
+            reservation.NumberOfAttendees = 2;
+            reservation.ReservedFor = "John Fulton";
+            DateTime startDate = reservation.StartDate;
+            DateTime endDate = reservation.EndDate;
+            string reservedFor = reservation.ReservedFor;
+            int numberOfAttendees = reservation.NumberOfAttendees;
+            int spaceId = reservation.SpaceId;
+            //Act
+            dao.CreateReservation(startDate, endDate, numberOfAttendees, reservedFor, spaceId);
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand command = new SqlCommand(
+                    "SELECT count(*) FROM reservation;", conn);
+
+                countAfter = (int)command.ExecuteScalar();
+            }
+
+            //Assert
+            Assert.AreEqual(countBefore + 1, countAfter);
+
+
+        }
+    }
 }
