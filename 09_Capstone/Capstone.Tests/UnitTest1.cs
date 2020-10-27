@@ -59,7 +59,7 @@ namespace Capstone.Tests
         }
 
         [TestMethod]
-        public void AddCityTest()
+        public void CreateReservationTest()
         {
             int countBefore = 0;
             int countAfter = 0;
