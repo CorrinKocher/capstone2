@@ -36,7 +36,7 @@ namespace Capstone
             {
 
                 DisplayMainMenu();
-                string menuSelection = Console.ReadLine();
+                string menuSelection = Console.ReadLine().ToUpper();
                 done = MainMenuSelection(menuSelection);
 
 
@@ -99,7 +99,7 @@ namespace Capstone
                 Console.WriteLine("1) View Spaces");
                 Console.WriteLine("2) Search for Reservation");
                 Console.WriteLine("R) Return to Previous Screen");
-                string venueMenuSelection = Console.ReadLine();
+                string venueMenuSelection = Console.ReadLine().ToUpper();
                 done = VenueMenuSelection(venueMenuSelection, venueIdRequested);
                
             }
@@ -135,7 +135,7 @@ namespace Capstone
                     Console.WriteLine("What would you like to do next?");
                     Console.WriteLine(" 1) Reserve a Space");
                     Console.WriteLine(" R) Return to Previous Screen");
-                    string bottomMenuSelection = Console.ReadLine();
+                    string bottomMenuSelection = Console.ReadLine().ToUpper();
                     switch (bottomMenuSelection)
                     {
                         case "1":
@@ -215,7 +215,7 @@ namespace Capstone
                     else
                     {
                         Console.WriteLine("No spaces available, would you like to search again? Y/N");
-                        string tryAgain = Console.ReadLine();
+                        string tryAgain = Console.ReadLine().ToUpper();
                         switch (tryAgain)
                         {
                             case "Y":
@@ -232,7 +232,7 @@ namespace Capstone
                 else
                 {
                     Console.WriteLine("No spaces available, would you like to search again? Y/N");
-                    string tryAgain = Console.ReadLine();
+                    string tryAgain = Console.ReadLine().ToUpper();
                     switch (tryAgain)
                     {
                         case "Y":
