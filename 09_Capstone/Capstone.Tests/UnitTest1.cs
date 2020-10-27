@@ -27,26 +27,14 @@ namespace Capstone.Tests
 
 
                 SqlDataReader reader = command.ExecuteReader();
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> 257758bd0081ef7b08fc0363b855fed862de1586
 
                 while (reader.Read())
                 {
  
                     count += 1;
                 }
-<<<<<<< HEAD
-                conn.Close();
-=======
 
-
-
-
->>>>>>> 257758bd0081ef7b08fc0363b855fed862de1586
             }
             
             //Act

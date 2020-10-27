@@ -67,11 +67,14 @@ namespace Capstone.DAL
                     closeMonth = ConvertToMonth(space.CloseDate);
                     openMonth = ConvertToMonth(space.OpenDate);
 
-                   if(space.WheelChairAccessibility)
+                    if (space.WheelChairAccessibility == false)
                     {
                         isAccessible = "No";
                     }
-                    isAccessible = "Yes";
+                    else
+                    {
+                        isAccessible = "Yes";
+                    }
 
                     spaceString = ($"{space.SpaceId}) {space.Name} {openMonth} {closeMonth} {space.DailyRate} {space.MaximumOccupancy} WheelChair Accessibility: {isAccessible}");
                     allSpacesByVenue.Add(spaceString);
@@ -83,12 +86,12 @@ namespace Capstone.DAL
                 return allSpacesByVenue;
 
             }
-            
+
 
 
 
         }
-    
+
 
         public string ConvertToMonth(string month)
         {
@@ -116,9 +119,9 @@ namespace Capstone.DAL
             return Months[month];
 
         }
-                        
 
-      
+
+
         /// <summary>
         /// displays the top5 available spaces for that venue based on client needs
         /// </summary>
@@ -136,7 +139,7 @@ namespace Capstone.DAL
                 conn.Open();
                 SqlCommand command = new SqlCommand(topFive, conn);
                 command.Parameters.AddWithValue("@venueId", venueId);
-                command.Parameters.AddWithValue("@max_occupancy",numberOfAttendees);
+                command.Parameters.AddWithValue("@max_occupancy", numberOfAttendees);
                 command.Parameters.AddWithValue("@startDate", startDate);
                 command.Parameters.AddWithValue("@endDate", startDate.AddDays(numberOfDays));
                 SqlDataReader reader = command.ExecuteReader();
